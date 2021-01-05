@@ -1,0 +1,11 @@
+# Jupyter Checkpoints
+*.ipynb_checkpoints
+
+# IDE files
+*.vscode/
+
+# Python binaries
+*__pycache__
+extrainfo
+*.sublime*
+*-workspace
