@@ -1,16 +1,16 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from matplotlib import rc
+
 import argparse
 import json
 import os
 import sys
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['CUDA_VISIBLE_DEVICES'] = "-1"
-
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-
-import matplotlib.pyplot as plt
-import numpy as np
-
 
 
 def decode_img(img):
@@ -34,8 +34,13 @@ def process_path(file_path):
 def plot_results(infer_images, inference_predicted_class, inference_predictions, class_names=['plants', 'water']):
     """Plot four images with predicted class and probabilities
     """
-    for i, (infer_img, _) in enumerate(infer_images.take(4)):
-        ax = plt.subplot(2, 2, i + 1)
+    plt.style.use(['dark_background', 'bmh'])
+    rc('figure', figsize=(8, 8), max_open_warning=False)
+    rc('axes', facecolor='none')
+    plt.figure(figsize=(15, 15))
+
+    for i, (infer_img, _) in enumerate(infer_images.take(10)):
+        ax = plt.subplot(5, 2, i + 1)
         plt.imshow(infer_img.numpy()/255)
 
         # Find the predicted class from predictions
@@ -44,6 +49,7 @@ def plot_results(infer_images, inference_predicted_class, inference_predictions,
         plt.title(m)
         plt.axis("off")
     plt.show()
+
 
 def run_inference(infer_images, model_path):
 
@@ -63,13 +69,14 @@ def run_inference(infer_images, model_path):
     plot_results(infer_images, inference_predicted_class,
                  inference_predictions)
 
-
     return results
+
 
 def save_results(results):
     """Save results to json
     """
     json.dump(results, open("results.json", "w"))
+
 
 def main(test_dir, model_path):
 
@@ -80,13 +87,13 @@ def main(test_dir, model_path):
 
     #inference
     results = run_inference(infer_images, model_path)
-    
+
     #save results
     save_results(results)
 
 
 if __name__ == '__main__':
-    
+
     # Initiate the parser
     parser = argparse.ArgumentParser()
 
